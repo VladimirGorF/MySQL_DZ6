@@ -1,6 +1,7 @@
 1.	Создайте функцию, которая принимает кол-во сек и форматирует их в кол-во дней, часов, минут и секунд.
 Пример: 123456 ->'1 days 10 hours 17 minutes 36 seconds '
-<img width="2048" alt="Снимок экрана 2023-04-02 в 14 27 57" src="https://user-images.githubusercontent.com/110591063/229349976-56a37f4f-f981-445c-95f3-7f59170302e6.png">
+<img width="2048" alt="Снимок экрана 2023-04-04 в 17 50 09" src="https://user-images.githubusercontent.com/110591063/229831462-7ce9af2d-2731-41ec-920e-d6ae05ebd094.png">
+
 
 
 
