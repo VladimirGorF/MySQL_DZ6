@@ -18,6 +18,74 @@
 а) из одного города
 б) состоят в одной группе
 в) друзья друзей
+
+DROP PROCEDURE IF EXISTS tor;
+DELIMITER //
+CREATE PROCEDURE tor(IN num INT) -- здесь num подразумевает id персонажа
+BEGIN
+
+--   выборка по городам
+SELECT user_id
+FROM profiles
+WHERE hometown =(SELECT hometown FROM profiles WHERE user_id = num) AND user_id != num
+
+UNION
+
+-- выборка по сообществам
+SELECT DISTINCT user_id
+FROM users_communities
+WHERE community_id IN (SELECT community_id FROM users_communities WHERE user_id = num) AND user_id != num
+
+-- выборка по друзьям друзей
+UNION
+ (SELECT initiator_user_id
+ FROM friend_requests
+
+ WHERE (target_user_id IN ( SELECT target_user_id
+ FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved")
+
+ OR initiator_user_id IN (SELECT initiator_user_id
+ FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved")
+
+OR initiator_user_id IN (SELECT target_user_id
+FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved")
+
+OR target_user_id IN ( SELECT initiator_user_id
+FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved"))
+
+AND status = "approved" AND initiator_user_id != num
+
+UNION
+
+ SELECT  target_user_id
+ FROM friend_requests
+
+ WHERE (target_user_id IN ( SELECT target_user_id
+ FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved")
+
+ OR initiator_user_id IN (SELECT initiator_user_id
+ FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved")
+
+OR initiator_user_id IN (SELECT target_user_id
+FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved")
+
+OR target_user_id IN ( SELECT initiator_user_id
+FROM friend_requests WHERE (target_user_id = num OR initiator_user_id = num) AND status = "approved"))
+
+AND status = "approved" AND target_user_id != num )
+
+ORDER BY RAND();
+END//
+
+CALL tor(1);
+
+
+
+
+
+
+
+
 Создать функцию, вычисляющей коэффициент популярности пользователя
 Создать процедуру для добавления нового пользователя с профилем
 
